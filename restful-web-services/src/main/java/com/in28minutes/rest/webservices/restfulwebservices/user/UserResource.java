@@ -2,9 +2,7 @@ package com.in28minutes.rest.webservices.restfulwebservices.user;
 
 import java.net.URI;
 import java.util.List;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +18,7 @@ public class UserResource {
 
 	@Autowired
 	private UserDaoService service;
-
+	
 	@GetMapping("/users")
 	public List<User> retrieveAllUsers() {
 		return service.findAll();
@@ -29,21 +27,17 @@ public class UserResource {
 	@GetMapping("/users/{id}")
 	public User retrieveUser(@PathVariable int id) {
 		User user = service.findOne(id);
-		
 		if(user==null)
 			throw new UserNotFoundException("id-"+ id);
-		
 		return user;
 	}
 
 	@DeleteMapping("/users/{id}")
 	public void deleteUser(@PathVariable int id) {
 		User user = service.deleteById(id);
-		
 		if(user==null)
 			throw new UserNotFoundException("id-"+ id);		
 	}
-
 	//
 	// input - details of user
 	// output - CREATED & Return the created URI
@@ -52,13 +46,10 @@ public class UserResource {
 		User savedUser = service.save(user);
 		// CREATED
 		// /user/{id}     savedUser.getId()
-		
 		URI location = ServletUriComponentsBuilder
 			.fromCurrentRequest()
 			.path("/{id}")
 			.buildAndExpand(savedUser.getId()).toUri();
-		
 		return ResponseEntity.created(location).build();
-		
 	}
 }
